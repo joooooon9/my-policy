@@ -3,6 +3,8 @@ name: my-policy
 services:
   postgres:
     image: postgres:17
+    # starts again whenever Docker Desktop starts, until stopped by hand (docker compose stop)
+    restart: unless-stopped
     environment:
       POSTGRES_DB: my_policy
       POSTGRES_USER: ${DB_USER:-my_policy}

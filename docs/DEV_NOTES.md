@@ -5,6 +5,9 @@
 ## 로컬 실행
 
 - PostgreSQL만 Docker Compose로 띄운다: `docker compose up -d` (데이터는 `postgres-data` 볼륨).
+  - `restart: unless-stopped`라 Docker Desktop이 켜지면 DB도 자동으로 켜진다. `docker compose stop`으로 직접 끈 경우에만 꺼진 채로 남는다.
+  - PC를 켤 때 Docker Desktop도 자동으로 켜려면 Docker Desktop → Settings → General → "Start Docker Desktop when you sign in to your computer".
+  - `docker compose down -v`는 볼륨까지 지워 데이터가 사라지니 쓰지 않는다.
 - 앱은 IntelliJ에서 `MyPolicyApplication`을 실행한다(기본 포트 8080).
 - DevTools가 들어 있다. IntelliJ에서 아래 두 설정을 켜면 템플릿·CSS는 새로고침, Java는 자동 재시작으로 반영된다.
   - Settings → Build, Execution, Deployment → Compiler → **Build project automatically**
