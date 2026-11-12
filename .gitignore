@@ -1,5 +1,32 @@
+# Gradle
 .gradle/
 build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
 .idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# Secrets and local settings
 .env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Skill installs (.claude/skills already holds the committed copy; skills-lock.json records the source)
 .agents/
+
+# design-taste-frontend check output (screenshots, gate state, Chrome profile)
+.taste-skill/
