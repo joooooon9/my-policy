@@ -20,9 +20,7 @@
             <label>거주 지역
                 <select name="region">
                     <option value="">전체 지역</option>
-                    <option value="전국" th:selected="${region == '전국'}">전국 공통</option>
-                    <option value="전북" th:selected="${region == '전북'}">전북특별자치도</option>
-                    <option value="익산" th:selected="${region == '익산'}">익산시</option>
+                    <option th:each="r : ${regions}" th:value="${r.param()}" th:selected="${region == r.param()}" th:text="${r.label()}"></option>
                 </select>
             </label>
             <label>만 나이<input name="age" type="number" min="0" max="130" placeholder="예: 28" th:value="${age}"></label>
@@ -49,17 +47,16 @@
             <a th:if="${searched}" th:href="@{/}">검색 초기화</a>
         </div>
         <p class="muted">화면 확인용 샘플 공고입니다.</p>
-        <p class="empty" th:if="${policies.isEmpty()}">조건에 맞는 샘플 공고가 없어요.</p>
+        <p class="empty" th:if="${policies.isEmpty()}">조건에 맞는 공고가 없어요.</p>
         <ul class="cards">
             <li th:each="policy : ${policies}">
                 <a class="card" th:href="@{/policies/{id}(id=${policy.id()})}">
-                    <span class="region" th:attr="data-region=${policy.region()}" th:text="${policy.region() == '전국' ? '전국 공통' : policy.region()}"></span>
+                    <span class="region" th:attr="data-region=${policy.region().name()}" th:text="${policy.region().label()}"></span>
                     <h3 th:text="${policy.title()}"></h3>
                     <p th:text="${policy.summary()}"></p>
-                    <div class="benefit"><span>지원 혜택</span><strong th:text="${policy.id() == 1 ? '월 최대 20만 원' : (policy.id() == 2 ? '수강료 지원' : '최대 100만 원')}"></strong></div>
-                    <div class="deadline" th:text="${policy.id() == 1 ? '11월 15일 마감 · D-3' : (policy.id() == 2 ? '11월 19일 마감 · D-7' : '11월 24일 마감 · D-12')}"></div>
-                    <small th:if="${!policy.note().isEmpty()}" th:text="${policy.note()}"></small>
-                    <small th:if="${policy.id() == 3 and smallBusiness != 'yes'}">중소기업 재직 여부 확인 필요</small>
+                    <div class="benefit" th:if="${policy.benefit() != null}"><span>지원 혜택</span><strong th:text="${policy.benefit()}"></strong></div>
+                    <div class="deadline" th:text="${policy.deadline()}"></div>
+                    <small th:each="note : ${policy.checkNotes()}" th:text="${note}"></small>
                 </a>
             </li>
         </ul>

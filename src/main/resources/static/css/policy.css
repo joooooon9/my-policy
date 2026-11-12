@@ -123,9 +123,9 @@ button:active, .btn:active { transform: scale(.97); }
 .card:active { transform: scale(.99); }
 .region { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); }
 .region::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot, var(--blue)); }
-[data-region="전국"] { --dot: var(--orange); }
-[data-region="전북"] { --dot: var(--green); }
-[data-region="익산"] { --dot: var(--blue); }
+[data-region="NATIONWIDE"] { --dot: var(--orange); }
+[data-region="JEONBUK"] { --dot: var(--green); }
+[data-region="IKSAN"] { --dot: var(--blue); }
 .card h3 { font-size: 19px; line-height: 1.4; margin-top: 4px; }
 .card p { color: var(--muted); font-size: 15px; }
 .benefit { display: grid; gap: 2px; margin-block: 14px 6px; }
@@ -150,6 +150,13 @@ small { display: inline-block; align-self: flex-start; font-size: 13px; font-wei
 .actions { padding: 28px; background: var(--panel); border: 0; }
 .actions strong { color: var(--ink); font-weight: 700; font-size: 18px; }
 .actions p { margin-top: 8px; color: var(--muted); }
+.actions .btn { width: 100%; margin-top: 16px; }
+.actions .checked { margin-top: 16px; font-size: 13px; color: var(--soft); }
+.detail .deadline-line { border-top: 0; padding-top: 0; margin-top: -8px; color: var(--blue); font-weight: 600; }
+.checks { display: grid; gap: 10px; margin-top: 24px; padding: 18px 20px; border-radius: var(--r-md); background: var(--warn-bg); }
+.checks strong { color: var(--warn); font-weight: 700; }
+.checks div { display: flex; flex-wrap: wrap; gap: 6px; }
+.checks small { background: var(--bg); }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; }

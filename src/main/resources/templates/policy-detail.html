@@ -16,22 +16,34 @@
     <a class="back" th:href="@{/}">← 공고 목록</a>
     <div class="detail-layout">
     <article class="detail">
-        <span class="region" th:attr="data-region=${policy.region()}" th:text="${policy.region()}"></span>
+        <span class="region" th:attr="data-region=${policy.region().name()}" th:text="${policy.region().label()}"></span>
         <h1 th:text="${policy.title()}"></h1>
-        <div class="benefit"><span>지원 혜택</span><strong th:text="${policy.id() == 1 ? '월 최대 20만 원' : (policy.id() == 2 ? '수강료 지원' : '최대 100만 원')}"></strong></div>
+        <div class="benefit" th:if="${policy.benefit() != null}"><span>지원 혜택</span><strong th:text="${policy.benefit()}"></strong></div>
         <dl>
             <dt>지원 대상</dt>
-            <dd th:text="|만 ${policy.minAge()}~${policy.maxAge()}세|"></dd>
-            <dd th:if="${policy.employedOnly()}" th:text="${policy.id() == 3 ? '중소기업 재직자' : '재직자'}"></dd>
+            <dd th:each="line : ${policy.target()}" th:text="${line}"></dd>
             <dt>지원 내용</dt>
             <dd th:text="${policy.summary()}"></dd>
             <dt>신청 기간</dt>
-            <dd>샘플 공고로 신청 기간과 공식 신청 링크가 제공되지 않습니다.</dd>
+            <dd th:text="${policy.period()}"></dd>
+            <dd class="deadline-line" th:if="${policy.open()}" th:text="${policy.deadline()}"></dd>
+            <dd class="deadline-line" th:unless="${policy.open()}">신청이 끝났거나 아직 시작하지 않았어요.</dd>
         </dl>
+        <div class="checks" th:if="${!policy.checkNotes().isEmpty()}">
+            <strong>추가 확인이 필요한 조건</strong>
+            <div><small th:each="note : ${policy.checkNotes()}" th:text="${note}"></small></div>
+        </div>
     </article>
     <aside class="detail actions">
         <strong>신청 안내</strong>
-        <p>예시 공고입니다. 실제 신청 페이지는 공식 공고 연동 후 표시됩니다.</p>
+        <th:block th:if="${policy.applyUrl() != null}">
+            <a class="btn" th:href="${policy.applyUrl()}" target="_blank" rel="noopener noreferrer">공식 신청 페이지로 이동</a>
+        </th:block>
+        <th:block th:if="${policy.applyUrl() == null and policy.officialUrl() != null}">
+            <a class="btn" th:href="${policy.officialUrl()}" target="_blank" rel="noopener noreferrer">공식 공고 보기</a>
+        </th:block>
+        <p th:if="${policy.applyUrl() == null and policy.officialUrl() == null}">화면 확인용 샘플 공고예요. 공식 공고를 연동하면 신청 페이지 링크가 여기에 표시돼요.</p>
+        <p class="checked" th:if="${policy.lastChecked() != null}" th:text="|마지막 확인 ${policy.lastChecked()}|"></p>
     </aside>
     </div>
 </main>
