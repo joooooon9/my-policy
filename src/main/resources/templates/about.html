@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-type="software" data-radius="soft" data-ground="sand" data-buttons="tonal" data-motion>
+<html lang="ko" data-type="software" data-radius="round" data-ground="sky" data-buttons="solid" data-motion>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -11,13 +11,15 @@
 <meta property="og:image" content="/img/about-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/img/about-mark.svg" type="image/svg+xml">
-<meta name="theme-color" content="#f7f9f8">
+<meta name="theme-color" content="#ffffff">
+<script src="/js/theme.js"></script>
 <!-- <link rel="canonical" href="https://[도메인 미정]/about"> : 공개 배포 도메인이 정해지면 추가 -->
 <meta name="site-kind" content="software">
 <meta name="page-type" content="software">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wdth,wght@85..100,400..700&family=IBM+Plex+Sans+KR:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/assets/system.css">
 <link rel="stylesheet" href="/assets/ui/cards.css">
 <link rel="stylesheet" href="/assets/motion/motion.css">
@@ -26,17 +28,30 @@
 <link rel="stylesheet" href="/assets/icons/icon.css">
 <style>
 :root {
-  --p-bg: #f7f9f8; --p-surface: #ebf0ee; --p-ink: #06525c; --p-muted: #2f737d;
-  --p-accent: #06525c; --p-accent-ink: #f7f9f8; --p-action: #06525c; --p-action-ink: #f7f9f8;
-  --p-inv-bg: #06525c; --p-inv-surface: #205d66; --p-inv-ink: #f7f9f8; --p-inv-muted: #c1d0d2;
-  --p-inv-accent: #f7f9f8; --p-inv-accent-ink: #06525c; --p-inv-action: #f7f9f8; --p-inv-action-ink: #06525c;
-  --font-display: "IBM Plex Sans", "IBM Plex Sans KR", system-ui, sans-serif;
-  --font-text: "IBM Plex Sans", "IBM Plex Sans KR", system-ui, sans-serif;
+  --p-bg: #ffffff; --p-surface: #f2f4f6; --p-ink: #191f28; --p-muted: #4e5968;
+  --p-accent: #1b64da; --p-accent-ink: #ffffff; --p-action: #1b64da; --p-action-ink: #ffffff;
+  --p-inv-bg: #191f28; --p-inv-surface: #262c35; --p-inv-ink: #ffffff; --p-inv-muted: #9fa2a6;
+  --p-inv-accent: #1b64da; --p-inv-accent-ink: #ffffff; --p-inv-action: #1b64da; --p-inv-action-ink: #ffffff;
+  --font-display: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  --font-text: "Pretendard Variable", Pretendard, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --display-weight: 500;
+  --display-weight: 700;
   --display-tracking: -0.025em;
   --display-tracking-xl: -0.035em;
   --ly-scale: 0.98;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --p-bg: #17171c; --p-surface: #202027; --p-ink: #f2f3f5; --p-muted: #b0b8c1;
+  --p-accent: #1b64da; --p-accent-ink: #ffffff; --p-action: #1b64da; --p-action-ink: #ffffff;
+  --p-inv-bg: #f2f4f6; --p-inv-surface: #ffffff; --p-inv-ink: #191f28; --p-inv-muted: #4e5968;
+  --p-inv-accent: #1b64da; --p-inv-accent-ink: #ffffff; --p-inv-action: #1b64da; --p-inv-action-ink: #ffffff;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --p-bg: #17171c; --p-surface: #202027; --p-ink: #f2f3f5; --p-muted: #b0b8c1;
+  --p-accent: #1b64da; --p-accent-ink: #ffffff; --p-action: #1b64da; --p-action-ink: #ffffff;
+  --p-inv-bg: #f2f4f6; --p-inv-surface: #ffffff; --p-inv-ink: #191f28; --p-inv-muted: #4e5968;
+  --p-inv-accent: #1b64da; --p-inv-accent-ink: #ffffff; --p-inv-action: #1b64da; --p-inv-action-ink: #ffffff;
+  color-scheme: dark;
 }
 </style>
 <link rel="stylesheet" href="/assets/ui/base.css">
@@ -55,6 +70,22 @@
   h1, h2, h3 { word-break: keep-all; }
   .hero__lead, .section-head p, .card p, .faq p, .rows p { word-break: keep-all; }
   #match .card p { color: var(--ink); }
+  /* a brighter lit ground (Toss-like sky) for the alert frame and the closing slab */
+  html[data-ground] :is(#alerts .frame--lit, .footer--statement) { --ground-bg: #e8f3ff; --ground-surface: #f5f9ff; --action: var(--p-action); --action-ink: var(--p-action-ink); }
+  /* dark: one rule set, applied by the system setting or the visitor's pick */
+  :root { --mock-chip: #ffffff; --note-bg: #fff4e5; --note-ink: #a65408; }
+  @media (prefers-color-scheme: dark) { html:not([data-theme="light"]) {
+    --mock-chip: #2c2c35; --note-bg: #3a2a17; --note-ink: #ffb86b; }
+    html[data-ground]:not([data-theme="light"]) :is(#alerts .frame--lit, .footer--statement) { --ground-bg: #1c2a42; --ground-surface: #22324d; --ground-ink: #f2f3f5; --ground-muted: #b0b8c1; --action: var(--p-action); --action-ink: var(--p-action-ink); }
+    html:not([data-theme="light"]) .ui { --fx-bg: #202027; --fx-surface: #26262e; --fx-ink: #f2f3f5; --fx-muted: #b0b8c1; --fx-accent: #5b9cff; } }
+  html[data-theme="dark"] { --mock-chip: #2c2c35; --note-bg: #3a2a17; --note-ink: #ffb86b; }
+  html[data-theme="dark"][data-ground] :is(#alerts .frame--lit, .footer--statement) { --ground-bg: #1c2a42; --ground-surface: #22324d; --ground-ink: #f2f3f5; --ground-muted: #b0b8c1; --action: var(--p-action); --action-ink: var(--p-action-ink); }
+  html[data-theme="dark"] .ui { --fx-bg: #202027; --fx-surface: #26262e; --fx-ink: #f2f3f5; --fx-muted: #b0b8c1; --fx-accent: #5b9cff; }
+  .theme-toggle { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; margin-right: var(--s-2); color: var(--muted); background: transparent; border: 0; border-radius: 12px; cursor: pointer; }
+  .theme-toggle:hover { color: var(--ink); background: var(--surface); }
+  .theme-toggle svg { width: 20px; height: 20px; }
+  .theme-toggle .i-sun, .theme-toggle[aria-pressed="true"] .i-moon { display: none; }
+  .theme-toggle[aria-pressed="true"] .i-sun { display: block; }
   /* a phone: the two answers the page already shows (the close says no login is needed; the app frame shows the apply button) */
   @media (max-width: 639px) { #faq .faq__item--wide { display: none; } }  #match .panel { --p-h: 320px; }
   .src { margin-top: var(--s-6); max-width: 400px; }
@@ -62,18 +93,20 @@
   @media (max-width: 639px) { #match .panel { --p-h: 190px; } }
 
   /* the result list (hero) and the search screen (app frame): the service's own screens as live HTML */
-  .pl { padding: 16px; display: grid; gap: 12px; }
+  .ui { --ui-radius: 20px; --fx-accent: #1b64da; --ui-font: var(--font-text); }
+  .pl { padding: 20px; display: grid; gap: 12px; }
   .pl__head { display: flex; align-items: baseline; gap: 8px; padding: 4px 4px 8px; border-bottom: 1px solid var(--u-line); }
-  .pl__title { font-size: 15px; font-weight: 500; }
+  .pl__title { font-size: 17px; font-weight: 700; }
   .pl__meta { color: var(--u-muted); font-size: 12px; }
-  .pl__card { display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--u-border); border-radius: var(--u-r2); background: var(--u-bg); }
-  .pl__card.is-on { border-color: var(--u-accent); box-shadow: inset 3px 0 0 var(--u-accent); }
-  .pl__region { font-size: 12px; font-weight: 500; color: var(--u-accent-text); }
-  .pl__name { font-size: 15px; line-height: 22px; font-weight: 500; }
+  .pl__card { display: grid; gap: 6px; padding: 16px 18px; border: 0; border-radius: 16px; background: var(--u-fill); }
+  .pl__card.is-on { background: var(--u-tint); }
+  .pl__region { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--u-muted); }
+  .pl__region::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot, #1b64da); }
+  .pl__name { font-size: 16px; line-height: 24px; font-weight: 700; }
   .pl__sum { color: var(--u-text-2); }
-  .pl__foot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-top: 6px; border-top: 1px solid var(--u-line); }
-  .pl__due { font-weight: 500; margin-right: auto; }
-  .pl__chip { font-size: 12px; line-height: 18px; padding: 1px 8px; border-radius: 99px; background: var(--u-fill-2); color: var(--u-ink); }
+  .pl__foot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-top: 4px; }
+  .pl__due { font-weight: 700; color: var(--u-accent-text); margin-right: auto; }
+  .pl__chip { font-size: 12px; line-height: 18px; padding: 3px 10px; border-radius: 99px; background: var(--mock-chip); color: var(--u-ink); font-weight: 600; }
 
   .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
   .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
@@ -83,22 +116,22 @@
   .sf { padding: 20px; display: grid; gap: 14px; }
   .sf__field { display: grid; gap: 6px; }
   .sf__label { font-size: 12px; font-weight: 500; color: var(--u-muted); }
-  .sf__input { display: flex; align-items: center; justify-content: space-between; height: 38px; padding: 0 12px; border: 1px solid var(--u-line-2); border-radius: var(--u-r3); background: var(--u-bg); }
-  .sf__seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 3px; border-radius: var(--u-r3); background: var(--u-fill-2); }
-  .sf__seg span { text-align: center; padding: 6px 4px; border-radius: 6px; white-space: nowrap; }
+  .sf__input { display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 14px; border: 0; border-radius: 12px; background: var(--u-fill-2); font-size: 15px; }
+  .sf__seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: var(--u-fill-2); }
+  .sf__seg span { text-align: center; padding: 8px 2px; border-radius: 9px; white-space: nowrap; font-size: 12px; }
   .sf__seg .is-on { background: var(--u-bg); box-shadow: var(--u-shadow-sm); font-weight: 500; }
-  .sf__btn { height: 40px; display: grid; place-items: center; border-radius: var(--u-r3); background: var(--u-ink); color: var(--u-bg); font-weight: 500; }
+  .sf__btn { height: 48px; display: grid; place-items: center; border-radius: 14px; background: var(--u-accent); color: #fff; font-weight: 700; font-size: 15px; }
   .sf__areas { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--u-muted); font-size: 12px; }
   .dt { padding: 24px 28px; display: grid; gap: 16px; align-content: start; }
-  .dt__title { font-size: 22px; line-height: 30px; font-weight: 500; }
+  .dt__title { font-size: 24px; line-height: 32px; font-weight: 700; }
   .dt__rows { display: grid; grid-template-columns: 96px minmax(0, 1fr); border-top: 1px solid var(--u-line); }
   .dt__rows > span { padding: 12px 0; border-bottom: 1px solid var(--u-line); }
   .dt__rows > .k { color: var(--u-muted); font-weight: 500; }
-  .dt__note { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--u-r2); background: var(--u-tint); }
-  .dt__note b { font-weight: 500; color: var(--u-accent-text); }
+  .dt__note { display: grid; gap: 6px; padding: 14px 16px; border-radius: 14px; background: var(--note-bg); }
+  .dt__note b { font-weight: 700; color: var(--note-ink); }
   .dt__acts { display: flex; flex-wrap: wrap; gap: 8px; }
-  .dt__acts span { height: 38px; padding: 0 16px; display: grid; place-items: center; border-radius: var(--u-r3); border: 1px solid var(--u-line-2); font-weight: 500; }
-  .dt__acts .is-main { background: var(--u-ink); border-color: var(--u-ink); color: var(--u-bg); }
+  .dt__acts span { height: 48px; padding: 0 20px; display: grid; place-items: center; border-radius: 14px; background: var(--u-fill-2); font-weight: 700; }
+  .dt__acts .is-main { background: var(--u-accent); color: #fff; }
   @media (max-width: 1023px) {
     .app.ui { grid-template-columns: minmax(0, 1fr); }
     .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
@@ -150,6 +183,7 @@
       <div class="nav__item"><a class="nav__link" href="#faq">질문</a></div>
     </nav>
     <div class="nav__actions">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="다크 모드"><svg class="i-moon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.4A7 7 0 0 1 7.6 3.5a7 7 0 1 0 8.9 8.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="i-sun" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
       <a class="btn btn--primary" href="/">내게 맞는 정책 찾기</a>
     </div>
     <button class="nav__toggle" type="button" aria-expanded="false" aria-label="메뉴">
@@ -163,29 +197,29 @@
     <div class="wrap"><div class="hero-text grid hero__grid">
       <div class="hero__text span-5">
         <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>전국 공통, 전북특별자치도, 익산시 공고</p>
-        <h1 id="hero-h">청년과 직장인을 위한 지원 정책 찾기</h1>
-        <p class="hero__lead">거주 지역, 나이, 재직 상태를 넣으면 신청할 수 있는 지원금과 정책 공고만 추려 보여줘요. 관심 공고는 마감 3일 전과 당일에 웹 푸시로 알려요.</p>
+        <h1 id="hero-h">청년과 직장인을 위한 지원금 찾기</h1>
+        <p class="hero__lead">사는 곳, 나이, 재직 상태만 알려 주세요. 지금 신청할 수 있는 지원금과 정책만 골라 드리고, 관심 공고는 마감 3일 전과 당일에 알림으로 챙겨 드려요.</p>
         <div class="btn-row"><a class="btn btn--primary" href="/">내게 맞는 정책 찾기<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="#alerts">알림 방식 보기</a></div>
       </div>
       <div class="hero__media frame span-6 start-7" data-visual role="img" aria-label="익산시, 재직 중 조건으로 검색한 결과 목록. 공고 세 건과 확인이 필요한 조건 표시"
-           data-fx="grain-gradient" data-fx-seed="12" data-fx-palette='{"bg":"#d9ccb7","surface":"#e9e0d2","ink":"#2a2622","muted":"#6f675c","accent":"#a8794a"}' data-fx-params='{"speed":0.25,"grainMotion":0,"calm":0.25,"calmX":0.5,"calmY":0.5,"tint":0.6,"contrast":0.55}' style="--calm-k:0%">
+           data-fx="grain-gradient" data-fx-seed="12" data-fx-palette='{"bg":"#bcd6ff","surface":"#e8f1ff","ink":"#191f28","muted":"#4e5968","accent":"#3182f6"}' data-fx-params='{"speed":0.25,"grainMotion":0,"calm":0.25,"calmX":0.5,"calmY":0.5,"tint":0.6,"contrast":0.55}' style="--calm-k:0%">
         <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:440px;--ay:48px;--ay-sm:24px" aria-hidden="true">
-          <div class="ui ui-panel pl" style="--fx-accent:#06525c">
+          <div class="ui ui-panel pl">
             <div class="pl__head"><span class="pl__title">맞춤 검색 결과</span><span class="pl__meta">익산시 · 재직 중</span></div>
             <div class="pl__card is-on">
-              <span class="pl__region">익산시</span>
+              <span class="pl__region" style="--dot:#1b64da">익산시</span>
               <span class="pl__name">청년 중소기업 근속 지원</span>
               <span class="pl__sum">지역 중소기업에 재직 중인 청년 지원</span>
               <span class="pl__foot"><span class="pl__due">11월 24일 마감</span><span class="pl__chip">근속기간 확인 필요</span></span>
             </div>
             <div class="pl__card">
-              <span class="pl__region">전북특별자치도</span>
+              <span class="pl__region" style="--dot:#2fb08a">전북특별자치도</span>
               <span class="pl__name">재직자 직무교육 지원</span>
               <span class="pl__sum">직무 역량을 높이는 교육 과정 지원</span>
               <span class="pl__foot"><span class="pl__due">11월 19일 마감</span></span>
             </div>
             <div class="pl__card">
-              <span class="pl__region">전국 공통</span>
+              <span class="pl__region" style="--dot:#f08a3e">전국 공통</span>
               <span class="pl__name">청년 주거비 지원</span>
               <span class="pl__sum">월세 부담을 덜어주는 청년 주거 지원</span>
               <span class="pl__foot"><span class="pl__due">11월 15일 마감</span><span class="pl__chip">소득 조건 확인 필요</span></span>
@@ -199,8 +233,8 @@
   <section class="section" id="search" aria-labelledby="search-h">
     <div class="wrap">
       <div class="grid">
-        <h2 id="search-h" class="span-5">맞춤 검색과 공고 상세</h2>
-        <p class="span-6 start-7 t-lead">조건을 넣고 결과에서 공고를 열면 지원 대상, 지원 내용, 신청 기간을 한 화면에서 봐요. 재직 중이라면 중소기업 재직 여부도 함께 골라요.</p>
+        <h2 id="search-h" class="span-5">조건 네 가지로 끝나는 맞춤 검색</h2>
+        <p class="span-6 start-7 t-lead">조건을 넣고 공고를 누르면 지원 대상, 지원 내용, 신청 기간이 한눈에 보여요. 중소기업 재직 여부를 잘 모르겠다면 그대로 골라도 괜찮아요.</p>
       </div>
       <div class="ui app fill" role="img" aria-label="맞춤 검색 조건 입력 화면과 청년 중소기업 근속 지원 공고의 상세 화면">
         <div class="app__pane app__pane--list">
@@ -236,20 +270,20 @@
     <div class="wrap">
       <div class="group">
         <div class="section-head">
-          <h2 id="match-h">조건에 맞는 공고만 남기는 매칭. <span class="muted">어긋나면 빼고, 확인할 조건은 표시해요.</span></h2>
+          <h2 id="match-h">나와 맞지 않는 공고는 미리 걸러요. <span class="muted">확인이 더 필요한 조건은 따로 알려 드려요.</span></h2>
         </div>
         <div class="grid">
           <article class="card card--row card--open m-nolift span-6">
             <h3>상위 지역 공고를 함께 보여줘요</h3>
             <p>익산시를 고르면 익산시, 전북특별자치도, 전국 공통 공고가 한 목록에 나와요.</p>
-            <div class="panel" data-fx="gradient-mesh" data-fx-seed="5" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","muted":"#5f6a5a","accent":"#6c8e63"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.5,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
+            <div class="panel" data-fx="gradient-mesh" data-fx-seed="5" data-fx-palette='{"bg":"#cdeedf","surface":"#e6f7ef","ink":"#191f28","muted":"#4e5968","accent":"#2fb08a"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.5,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
               <div class="dg" data-diagram><script type="application/json">{"layout":"hub","alt":"익산시를 고르면 맞춤 검색이 익산시, 전북특별자치도, 전국 공통 공고를 함께 찾습니다.","center":{"label":"익산시 검색","icon":"ui:search"},"spokes":[{"label":"익산시","icon":"ui:pin"},{"label":"전북특별자치도","icon":"ui:pin"},{"label":"전국 공통","icon":"ui:pin"}]}</script></div>
             </div>
           </article>
           <article class="card card--row card--open m-nolift span-6">
             <h3>필수 요건이 어긋나면 빼요</h3>
             <p>나이나 지역처럼 명확히 다른 공고는 맞춤 결과와 새 공고 알림에서 제외해요.</p>
-            <div class="panel" data-fx="gradient-mesh" data-fx-seed="14" data-fx-palette='{"bg":"#c6d3df","surface":"#d6e0e9","ink":"#25303a","muted":"#5d6873","accent":"#3f6a92"}' data-fx-params='{"speed":0,"calm":0.15,"calmX":0.5,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
+            <div class="panel" data-fx="gradient-mesh" data-fx-seed="14" data-fx-palette='{"bg":"#d3e3ff","surface":"#eaf2ff","ink":"#191f28","muted":"#4e5968","accent":"#3182f6"}' data-fx-params='{"speed":0,"calm":0.15,"calmX":0.5,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
               <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:340px;--ay:40px;--ay-sm:24px">
                 <div class="ui ui-panel ui-checks" data-ui="checklist">
                   <div class="ui-checks__head">
@@ -274,7 +308,7 @@
         <article class="card card--row card--open m-nolift span-6">
           <h3>공식 공고를 1시간마다 확인해요</h3>
           <p>원문 링크와 마지막 확인 시각을 남기고, 마감 변경과 모집 취소를 반영해요.</p>
-          <div class="panel" data-fx="gradient-mesh" data-fx-seed="21" data-fx-palette='{"bg":"#d9ccb7","surface":"#e9e0d2","ink":"#2a2622","muted":"#6f675c","accent":"#a8794a"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.4,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
+          <div class="panel" data-fx="gradient-mesh" data-fx-seed="21" data-fx-palette='{"bg":"#ffe3cf","surface":"#fff2e8","ink":"#191f28","muted":"#4e5968","accent":"#f08a3e"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.4,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
             <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:380px;--ay:40px;--ay-sm:24px">
               <div class="ui ui-panel log" role="img" aria-label="공고별 확인 결과: 새 공고, 변경 없음, 마감 변경">
                 <div class="ui-head"><div class="ui-title">공식 공고 확인</div><span class="ui-spacer"></span><div class="ui-meta">원문 링크 기록</div></div>
@@ -289,7 +323,7 @@
         <article class="card card--row card--open m-nolift span-6">
           <h3>카카오 로그인으로 조건을 저장해요</h3>
           <p>로그인하면 맞춤 조건 저장, 관심 공고 등록, 웹 푸시 설정을 쓸 수 있어요.</p>
-          <div class="panel" data-fx="gradient-mesh" data-fx-seed="33" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","muted":"#5f6a5a","accent":"#6c8e63"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.6,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
+          <div class="panel" data-fx="gradient-mesh" data-fx-seed="33" data-fx-palette='{"bg":"#fff0b8","surface":"#fff8dc","ink":"#191f28","muted":"#4e5968","accent":"#e0a800"}' data-fx-params='{"speed":0,"calm":0.2,"calmX":0.6,"calmY":0.6,"tint":0.6,"relief":0.35}' style="--calm-k:0%">
             <div class="stage stage--fade-b"><div class="at-right to-edge" style="--ax:32px;--ay:40px" data-ui-loop>
               <div class="ui ui-panel ui-toggles" data-ui="toggles">
                 <div class="ui-head">
@@ -324,11 +358,11 @@
     </div>
   </section>
 
-  <section class="section ground-surface" id="alerts" aria-labelledby="alerts-h" data-moment="iris-opens" data-moment-opts='{"from": "base"}'>
+  <section class="section ground-surface" id="alerts" aria-labelledby="alerts-h" style="--hm: 2" data-moment="iris-opens" data-moment-opts='{"from": "base"}'>
     <div class="wrap">
       <div class="grid fill">
         <div class="span-5 stack-4">
-          <h2 id="alerts-h">새 공고와 마감을 알리는 웹 푸시</h2>
+          <h2 id="alerts-h">새 공고와 마감일을 챙기는 알림</h2>
           <p class="t-lead">푸시를 켠 회원의 브라우저로 보내고, 알림을 누르면 공고 상세가 열려요.</p>
           <ul class="rows">
             <li><span class="rows__name">맞춤 새 공고</span><p>조건에 맞는 새 공고를 찾으면 공고당 한 번 알려요.</p></li>
@@ -371,7 +405,7 @@
           <div class="faq__item faq__item--wide"><h3>로그인 없이도 쓸 수 있나요?</h3><p>네. 공고 목록과 상세, 맞춤 검색은 로그인 없이 써요. 조건 저장, 관심 공고, 웹 푸시에는 카카오 로그인이 필요해요.</p></div>
           <div class="faq__item"><h3>어느 지역 공고를 볼 수 있나요?</h3><p>전국 공통, 전북특별자치도, 익산시 공고예요. 자동 수집은 전국 공통부터 시작하고 전북과 익산을 차례로 더해요. 수집 중인 지역만 고를 수 있어요.</p></div>
           <div class="faq__item"><h3>마감 시각은 어떻게 정하나요?</h3><p>공식 공고에 적힌 기간을 한국 시간으로 따라요. 공고에 없는 마감 시각은 정하지 않아요.</p></div>
-          <div class="faq__item faq__item--wide"><h3>신청은 어디서 하나요?</h3><p>공고 상세의 ‘공식 신청 페이지로 이동’ 버튼으로 가요. 신청 링크가 따로 없으면 ‘공식 공고 보기’로 원문을 열어요.</p></div>
+          <div class="faq__item"><h3>신청은 어디서 하나요?</h3><p>공고 상세의 ‘공식 신청 페이지로 이동’ 버튼으로 가요. 신청 링크가 따로 없으면 ‘공식 공고 보기’로 원문을 열어요.</p></div>
           <div class="faq__item"><h3>예전에 올라온 공고도 마감 알림을 받나요?</h3><p>네. 첫 수집에서 가져온 공고도 관심 공고로 등록하면 마감 알림 대상이 돼요.</p></div>
           <div class="faq__item"><h3>같은 알림이 두 번 오지는 않나요?</h3><p>수집을 반복하거나 작업을 다시 시도해도 이미 보낸 알림은 다시 보내지 않아요.</p></div>
         </div>
@@ -383,8 +417,8 @@
   <div class="wrap">
     <div class="closing__cta close--type">
       <div class="section-head">
-        <h2 id="close-h">지금 신청할 수 있는 정책 확인</h2>
-        <p>로그인 없이 바로 검색할 수 있어요.</p>
+        <h2 id="close-h">지금 신청할 수 있는 지원금 확인</h2>
+        <p>로그인 없이 바로 찾아볼 수 있어요.</p>
       </div>
       <a class="btn btn--primary btn--xl btn--wide" href="/">내게 맞는 정책 찾기<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
     </div>
