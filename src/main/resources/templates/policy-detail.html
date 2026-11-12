@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${policy.title()}"></title>
+    <link rel="stylesheet" th:href="@{/css/policy.css}">
+</head>
+<body>
+<header><div class="wrap"><a th:href="@{/}">나의 정책 찾기</a></div></header>
+<main class="wrap">
+    <p><a th:href="@{/}">공고 목록</a></p>
+    <div class="detail-layout">
+    <article class="detail">
+        <span class="region" th:text="${policy.region()}"></span>
+        <h1 th:text="${policy.title()}"></h1>
+        <div class="benefit"><span>지원 혜택</span><strong th:text="${policy.id() == 1 ? '월 최대 20만 원' : (policy.id() == 2 ? '수강료 지원' : '최대 100만 원')}"></strong></div>
+        <dl>
+            <dt>지원 대상</dt>
+            <dd th:text="|만 ${policy.minAge()}~${policy.maxAge()}세|"></dd>
+            <dd th:if="${policy.employedOnly()}" th:text="${policy.id() == 3 ? '중소기업 재직자' : '재직자'}"></dd>
+            <dt>지원 내용</dt>
+            <dd th:text="${policy.summary()}"></dd>
+            <dt>신청 기간</dt>
+            <dd>샘플 공고로 신청 기간과 공식 신청 링크가 제공되지 않습니다.</dd>
+        </dl>
+    </article>
+    <aside class="detail actions">
+        <strong>신청 안내</strong>
+        <p>예시 공고입니다. 실제 신청 페이지는 공식 공고 연동 후 표시됩니다.</p>
+    </aside>
+    </div>
+</main>
+</body>
+</html>

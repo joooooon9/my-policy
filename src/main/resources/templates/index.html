@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>나의 정책 찾기</title>
+    <link rel="stylesheet" th:href="@{/css/policy.css}">
+</head>
+<body>
+<header><div class="wrap"><a th:href="@{/}">나의 정책 찾기</a></div></header>
+<main class="wrap">
+    <section class="search">
+        <h1>내 조건에 맞는 정책 찾기</h1>
+        <form method="get" th:action="@{/}">
+            <label>거주 지역
+                <select name="region">
+                    <option value="">전체 지역</option>
+                    <option value="전국" th:selected="${region == '전국'}">전국 공통</option>
+                    <option value="전북" th:selected="${region == '전북'}">전북특별자치도</option>
+                    <option value="익산" th:selected="${region == '익산'}">익산시</option>
+                </select>
+            </label>
+            <label>만 나이<input name="age" type="number" min="0" max="130" placeholder="예: 28" th:value="${age}"></label>
+            <label>재직 상태
+                <select name="employment" id="employment">
+                    <option value="">전체</option>
+                    <option value="employed" th:selected="${employment == 'employed'}">재직 중</option>
+                    <option value="unemployed" th:selected="${employment == 'unemployed'}">미재직</option>
+                </select>
+            </label>
+            <label id="company" th:hidden="${employment != 'employed'}">중소기업 재직 여부
+                <select name="smallBusiness" th:disabled="${employment != 'employed'}">
+                    <option value="">잘 모르겠어요</option>
+                    <option value="yes" th:selected="${smallBusiness == 'yes'}">예</option>
+                    <option value="no" th:selected="${smallBusiness == 'no'}">아니요</option>
+                </select>
+            </label>
+            <button type="submit">내 조건으로 찾기</button>
+        </form>
+    </section>
+    <section class="results">
+        <div class="results-heading">
+            <h2 th:text="${searched ? '맞춤 검색 결과' : '신청 가능한 공고'}"></h2>
+            <a th:if="${searched}" th:href="@{/}">검색 초기화</a>
+        </div>
+        <p class="muted">화면 확인용 샘플 공고입니다.</p>
+        <p th:if="${policies.isEmpty()}">조건에 맞는 샘플 공고가 없어요.</p>
+        <ul class="cards">
+            <li th:each="policy : ${policies}">
+                <a class="card" th:href="@{/policies/{id}(id=${policy.id()})}">
+                    <span class="region" th:text="${policy.region() == '전국' ? '전국 공통' : policy.region()}"></span>
+                    <h3 th:text="${policy.title()}"></h3>
+                    <p th:text="${policy.summary()}"></p>
+                    <div class="benefit"><span>지원 혜택</span><strong th:text="${policy.id() == 1 ? '월 최대 20만 원' : (policy.id() == 2 ? '수강료 지원' : '최대 100만 원')}"></strong></div>
+                    <div class="deadline" th:text="${policy.id() == 1 ? '11월 15일 마감 · D-3' : (policy.id() == 2 ? '11월 19일 마감 · D-7' : '11월 24일 마감 · D-12')}"></div>
+                    <small th:if="${!policy.note().isEmpty()}" th:text="${policy.note()}"></small>
+                    <small th:if="${policy.id() == 3 and smallBusiness != 'yes'}">중소기업 재직 여부 확인 필요</small>
+                </a>
+            </li>
+        </ul>
+    </section>
+</main>
+<script>
+    const employment = document.querySelector('#employment');
+    const company = document.querySelector('#company');
+    employment.addEventListener('change', () => {
+        company.hidden = employment.value !== 'employed';
+        company.querySelector('select').disabled = company.hidden;
+    });
+</script>
+</body>
+</html>
