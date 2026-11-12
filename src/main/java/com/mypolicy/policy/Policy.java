@@ -121,6 +121,14 @@ public class Policy {
         updatedAt = Instant.now();
     }
 
+    /** The source may move a notice to another region or rename it; source and sourceId never change. */
+    public Policy withContent(Region region, String title, String summary) {
+        this.region = region;
+        this.title = title;
+        this.summary = summary;
+        return this;
+    }
+
     public Policy withBenefit(String benefit) {
         this.benefit = benefit;
         return this;

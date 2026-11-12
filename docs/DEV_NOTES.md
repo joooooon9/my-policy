@@ -9,7 +9,7 @@
 - DevTools가 들어 있다. IntelliJ에서 아래 두 설정을 켜면 템플릿·CSS는 새로고침, Java는 자동 재시작으로 반영된다.
   - Settings → Build, Execution, Deployment → Compiler → **Build project automatically**
   - Settings → Advanced Settings → **Allow auto-make to start even if developed application is currently running**
-- 테스트: `./gradlew test` (단위 테스트만 있음, DB 불필요).
+- 테스트: `./gradlew test`. 수집 테스트(`CollectionServiceTest`)는 Testcontainers로 PostgreSQL 컨테이너를 띄우므로 Docker Desktop이 켜져 있어야 한다.
 
 ## 정한 것
 
@@ -22,6 +22,10 @@
 | 2026-11-12 | 매칭 규칙은 `PolicyMatcher`에 있다. 지역·나이·재직 상태·중소기업 "아니요"가 명확히 어긋날 때만 제외하고, 소득·근속기간·중소기업 "잘 모르겠어요"는 확인 필요 칩으로 표시한다. |
 | 2026-11-12 | 날짜는 `Clock`(Asia/Seoul, `my-policy.zone`)으로 계산한다. 마감 시각(`apply_end_time`)은 공고에 있을 때만 저장·표시한다. |
 | 2026-11-12 | 공식 API를 붙이기 전까지 샘플 공고 3개를 `source = 'sample'`로 넣는다(`my-policy.sample-data=true`, DB에 샘플이 없을 때만 한 번). |
+| 2026-11-13 | 수집 구조: 출처마다 `PolicySource`를 구현한 빈을 두고, `CollectionScheduler`가 매시 정각(한국 시간, `my-policy.collect.cron`)에 `CollectionService`로 하나씩 수집한다. 실행 기록은 `collection_run`, 변경은 `policy_event`(NEW, DEADLINE_CHANGED, CANCELLED)에 남긴다. 푸시는 나중에 이 이벤트를 읽는다. |
+| 2026-11-13 | 출처의 첫 성공 수집은 목록만 채우고 NEW 이벤트를 만들지 않는다. 실패한 수집은 아무것도 바꾸지 않고, 다음 실행이 여전히 첫 수집으로 처리된다. |
+| 2026-11-13 | 목록에서 빠진 공고는 취소로 보지 않는다. 출처가 취소라고 알려 줄 때만 CANCELLED로 바꾼다(온통청년 응답에서 취소가 어떻게 보이는지 확인 필요). |
+| 2026-11-13 | 중복 방지: NEW와 CANCELLED는 공고당 한 번(DB 부분 유니크 인덱스 + 코드 확인). 같은 목록을 다시 수집하면 변경이 없어 이벤트도 생기지 않는다. |
 | 2026-11-12 | 스킬 사본(`.claude/skills/design-taste-frontend`, 38MB)은 저장소에 그대로 둔다. 설치 원본은 `.agents/`(무시), 출처는 `skills-lock.json`. |
 
 ## 알려진 문제
@@ -32,6 +36,9 @@
 - **외부 CDN 의존.** Pretendard를 jsDelivr에서 불러온다. CDN이 막히면 시스템 글꼴로 보인다. 필요하면 `static/`에 직접 넣는다.
 - **`/about` 문구가 아직 없는 기능을 설명한다.** 카카오 로그인, 관심 공고, 웹 푸시, 공식 API 수집은 미구현이다. 출시 전에 구현하거나 문구를 맞춘다.
 - **지역 선택지.** CLAUDE.md는 "수집 중인 지역만 선택지에 노출"인데 지금은 세 지역이 모두 나온다. 수집을 붙일 때 `Region`에 수집 여부를 두고 걸러야 한다.
+- **수집 동시 실행.** 서버를 여러 대 띄우면 각자 매시 수집한다. 지금은 한 대 전제라 잠금(ShedLock 등)이 없다. 배포 구성이 정해지면 다시 본다.
+- **취소된 공고가 다시 올라오는 경우.** 한 번 CANCELLED가 되면 출처가 다시 정상으로 보여 줘도 ACTIVE로 돌리지 않는다. 실제로 그런 일이 있는지 확인 필요.
+- **Testcontainers 버전 고정.** Spring Boot 3.5.0이 고정한 Testcontainers 1.21.0은 Docker 29가 거부하는 API 버전으로 접속해 "Could not find a valid Docker environment"(BadRequest)가 난다. `build.gradle`에서 1.21.4로 올렸다. Spring Boot를 올릴 때 이 줄이 아직 필요한지 본다.
 - **Gradle 경고.** 빌드에 "Gradle 10과 호환되지 않는 기능 사용" 경고가 나온다. `--warning-mode all`로 원인 확인 필요.
 
 ## 확인해야 할 것
@@ -73,7 +80,7 @@ CLAUDE.md 조건: 신청 기간, 지원 대상, 공식 공고 링크를 주는 �
 ## 다음 작업
 
 1. ~~공고 데이터 모델과 서비스 분리~~ (2026-11-12 완료)
-2. 공식 API 결정
-3. 1시간 주기 수집(출처·식별자로 갱신, 마감 변경·모집 취소 반영, 첫 수집은 알림 제외)
+2. 공식 API 결정: 온통청년 추천, 인증키 발급 대기
+3. ~~1시간 주기 수집의 뼈대~~ (2026-11-13 완료) → 키를 받으면 `PolicySource` 구현(온통청년 응답 → `SourcePolicy` 변환, 지역 코드 매핑, 페이지 넘기기)
 4. 카카오 로그인, 조건 저장, 관심 공고
 5. 웹 푸시(새 공고, 마감 3일 전·당일, 변경·취소, 중복 발송 방지)

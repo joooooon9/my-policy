@@ -25,6 +25,11 @@ dependencies {
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    // 1.21.0 (Boot 3.5.0's pin) calls Docker with an API version Docker 29 refuses; 1.21.4 negotiates a newer one
+    testImplementation platform('org.testcontainers:testcontainers-bom:1.21.4')
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     developmentOnly platform('org.springframework.boot:spring-boot-dependencies:3.5.0')
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
