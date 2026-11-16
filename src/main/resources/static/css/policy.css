@@ -91,6 +91,7 @@ main { padding-block: 48px 96px; }
 .search h1 { font-size: clamp(28px, 2vw + 16px, 40px); line-height: 1.25; margin-bottom: 8px; }
 .search-lead { color: var(--muted); font-size: 17px; margin-bottom: 28px; }
 form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 16px; align-items: end; }
+form .keyword { grid-column: 1 / -1; }
 label { display: grid; gap: 8px; font-size: 14px; font-weight: 600; color: var(--muted); }
 input, select, button { font: inherit; }
 input, select {
@@ -120,6 +121,18 @@ button:active, .btn:active { transform: scale(.97); }
 .results-heading a:hover { background: var(--blue-tint); }
 .muted { color: var(--soft); font-size: 14px; }
 .results > .muted { margin-bottom: 20px; }
+.results-heading .count { margin-left: 4px; color: var(--blue); }
+.more { display: flex; justify-content: center; margin-top: 32px; }
+.more-btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 28px; border-radius: 999px;
+    background: var(--panel); color: var(--ink); font-size: 16px; font-weight: 700; text-decoration: none;
+    transition: transform .2s var(--ease), background-color .2s var(--ease);
+}
+.more-btn:hover { background: color-mix(in oklab, var(--panel) 85%, var(--ink)); }
+.more-btn:active { transform: scale(.97); }
+.more-btn[aria-busy="true"] { opacity: .6; pointer-events: none; }
+.more-count { font-weight: 500; color: var(--muted); }
+.cards > li { scroll-margin-top: calc(var(--nav) + 24px); }
 .empty { padding: 32px; text-align: center; color: var(--muted); background: var(--fill); border-radius: var(--r-md); }
 
 .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }

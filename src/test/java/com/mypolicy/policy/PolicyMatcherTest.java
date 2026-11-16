@@ -19,6 +19,11 @@ class PolicyMatcherTest {
         return SearchCondition.fromParams(region, age, employment, smallBusiness);
     }
 
+    private static SearchCondition condition(String region, Integer age, String employment, String smallBusiness,
+            String keyword) {
+        return SearchCondition.fromParams(region, age, employment, smallBusiness, keyword);
+    }
+
     @Test
     void iksanShowsIksanJeonbukAndNationwide() {
         SearchCondition iksan = condition("익산", null, "", "");
@@ -107,6 +112,25 @@ class PolicyMatcherTest {
         assertThat(PolicyMatcher.isOpen(noDates, TODAY)).isTrue();
         noDates.cancel();
         assertThat(PolicyMatcher.isOpen(noDates, TODAY)).isFalse();
+    }
+
+    @Test
+    void everyKeywordWordMustAppearInTheNoticeWordsInAnyCase() {
+        Policy rent = new Policy("test", "rent", Region.IKSAN, "청년 월세 지원", "월세 부담을 덜어 드려요")
+                .withSupportContent("월 최대 20만 원, AI 교육 포함").withInstitution("전북특별자치도 익산시");
+
+        assertThat(PolicyMatcher.matches(rent, condition("", null, "", "", "월세"))).isTrue();
+        assertThat(PolicyMatcher.matches(rent, condition("", null, "", "", "익산시 월세"))).isTrue(); // institution + title
+        assertThat(PolicyMatcher.matches(rent, condition("", null, "", "", "ai"))).isTrue(); // support text, any case
+        assertThat(PolicyMatcher.matches(rent, condition("", null, "", "", "월세 창업"))).isFalse(); // one word missing
+        assertThat(PolicyMatcher.matches(rent, condition("", null, "", "", "   "))).isTrue(); // blank filters nothing
+    }
+
+    @Test
+    void aKeywordAloneIsASearch() {
+        assertThat(condition("", null, "", "", "  월세  ").keyword()).isEqualTo("월세");
+        assertThat(condition("", null, "", "", "월세").isSearch()).isTrue();
+        assertThat(condition("", null, "", "", " ").isSearch()).isFalse();
     }
 
     @Test

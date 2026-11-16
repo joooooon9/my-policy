@@ -3,6 +3,10 @@ package com.mypolicy.policy;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.mypolicy.policy.SearchCondition.Employment;
 import com.mypolicy.policy.SearchCondition.SmallBusiness;
@@ -49,7 +53,25 @@ public final class PolicyMatcher {
         if (policy.isUnemployedOnly() && condition.employment() == Employment.EMPLOYED) {
             return false;
         }
-        return !(policy.isSmallBusinessOnly() && condition.smallBusiness() == SmallBusiness.NO);
+        if (policy.isSmallBusinessOnly() && condition.smallBusiness() == SmallBusiness.NO) {
+            return false;
+        }
+        return matchesKeyword(policy, condition.keyword());
+    }
+
+    /** Every word of the keyword appears in the name, explanation, support text or institution (any case). */
+    public static boolean matchesKeyword(Policy policy, String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return true;
+        }
+        String text = Stream.of(policy.getTitle(), policy.getSummary(), policy.getSupportContent(), policy.getInstitution())
+                .filter(Objects::nonNull).collect(Collectors.joining(" ")).toLowerCase(Locale.ROOT);
+        for (String word : keyword.toLowerCase(Locale.ROOT).split("\\s+")) {
+            if (!word.isEmpty() && !text.contains(word)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** The notice's own notes, plus the small-business check when that answer is still open. */
