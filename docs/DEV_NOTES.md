@@ -36,6 +36,7 @@
 | 2026-11-16 | 접수 구분 `aplyPrdSeCd`: 특정기간이면 `aplyYmd` 날짜, 상시는 날짜 없음, 마감은 CLOSED 상태로 저장(목록에서 빠짐, 다시 열리면 ACTIVE). 회차가 여러 개면 오늘 진행 중인 회차, 없으면 다음 회차. 마감 시각은 API에 없어 넣지 않는다. |
 | 2026-11-16 | 공고 자체 링크가 없으면 온통청년 상세 페이지(`/youthPolicy/ythPlcyTotalSearch/ythPlcyDetail/{plcyNo}`)를 공식 공고 링크로 쓴다. |
 | 2026-11-16 | 지원 내용 원문(`support_content`), 운영 기관(`institution`), 미취업자 전용(`unemployed_only`)을 추가했다(V3). 미취업자 전용 공고는 재직 중으로 검색하면 빠진다. 샘플 공고는 V3에서 지우고 `my-policy.sample-data=false`로 껐다. |
+| 2026-11-17 | 검색·상세 화면의 틀을 `/about`(스킬 키트)에 맞췄다: 헤더 72px(폰 56px), 콘텐츠 최대 1280px에 양옆 80/48/24px, 로고 22px·굵기 500, 메뉴 글자 15px에 밑줄 효과, 알약 모양 버튼, 폰 기준 639px. 헤더와 푸터는 `templates/fragments/layout.html` 한 곳에서 관리한다. 모든 화면 푸터에 "정책 정보 출처: 온통청년(한국고용정보원)"을 표시한다. 폰에서 `/about`은 메뉴 버튼(☰)으로 접히고 검색 화면은 "서비스 소개"와 다크 모드 버튼을 그대로 보여 준다. |
 | 2026-11-12 | 스킬 사본(`.claude/skills/design-taste-frontend`, 38MB)은 저장소에 그대로 둔다. 설치 원본은 `.agents/`(무시), 출처는 `skills-lock.json`. |
 
 ## 알려진 문제

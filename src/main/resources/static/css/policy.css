@@ -18,7 +18,9 @@
     --r-sm: 12px;
     --r-md: 16px;
     --r-lg: 24px;
-    --nav: 64px;
+    --nav: 72px;
+    --gut: 80px;
+    --accent: #1b64da;
     --ease: cubic-bezier(.22, 1, .36, 1);
     --font: "Pretendard Variable", Pretendard, system-ui, sans-serif;
     --header: rgb(255 255 255 / .96);
@@ -58,23 +60,29 @@ p, dd { word-break: keep-all; }
 a { color: var(--blue); text-underline-offset: 3px; }
 [hidden] { display: none !important; }
 
-.wrap { width: min(100% - 160px, 1080px); margin-inline: auto; }
+/* the frame, matched to /about (assets/system.css): one column 1280 wide with 80 / 48 / 24 at the sides */
+.wrap { width: min(100% - 2 * var(--gut), 1280px); margin-inline: auto; }
 
-/* header */
-.site-header { position: sticky; top: 0; z-index: 10; height: var(--nav); background: var(--header); border-bottom: 1px solid var(--line); }
-.site-header .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
-.logo img { width: 22px; height: 22px; }
-.nav-link { font-size: 15px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 10px 14px; border-radius: 10px; transition: background-color .2s var(--ease), color .2s var(--ease); }
-.nav-link:hover { background: var(--panel); color: var(--ink); }
-.header-actions { display: flex; align-items: center; gap: 4px; }
+/* header, matched to /about's nav: 72 tall (56 on a phone), the logo at 22, words at 15 with a line drawn on hover */
+.site-header { position: sticky; top: 0; z-index: 10; height: var(--nav); background: var(--bg); border-bottom: 1px solid var(--line); }
+.site-header__bar { height: 100%; display: flex; align-items: center; gap: 64px; }
+.logo { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; line-height: 1; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; flex: none; }
+.mark { display: inline-block; flex: none; width: 22px; height: 22px; background: var(--accent);
+        -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat;
+        --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='2.5' width='20' height='5.5' rx='2.75'/%3E%3Crect x='2' y='9.25' width='14' height='5.5' rx='2.75'/%3E%3Crect x='2' y='16' width='8' height='5.5' rx='2.75'/%3E%3C/svg%3E"); }
+.site-nav { display: flex; align-self: stretch; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+.nav-link { position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 12px; font-size: 15px; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.nav-link::before, .nav-link[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -2px; height: 2px; border-radius: 2px; background: currentColor; }
+.nav-link::before { transform: scaleX(0); transform-origin: right; transition: transform .2s var(--ease); }
+.nav-link:hover::before, .nav-link:focus-visible::before { transform: scaleX(1); transform-origin: left; }
+.header-actions { display: flex; align-items: center; gap: 16px; flex: none; margin-left: auto; }
 .theme-toggle { width: 44px; height: 44px; padding: 0; color: var(--muted); background: transparent; border-radius: 12px; }
 .theme-toggle:hover { color: var(--ink); background: var(--panel); }
 .theme-toggle svg { width: 20px; height: 20px; }
 .theme-toggle .i-sun, .theme-toggle[aria-pressed="true"] .i-moon { display: none; }
 .theme-toggle[aria-pressed="true"] .i-sun { display: block; }
 
-main { padding-block: 40px 96px; }
+main { padding-block: 48px 96px; }
 
 /* custom search */
 .search { padding: 40px; background: var(--panel); border-radius: var(--r-lg); }
@@ -95,7 +103,7 @@ input:focus, select:focus { outline: none; border-color: var(--blue); }
 button, .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     height: 52px; padding: 0 24px; font-size: 16px; font-weight: 700; text-decoration: none;
-    color: #fff; background: var(--btn); border: 0; border-radius: 14px; cursor: pointer;
+    color: #fff; background: var(--btn); border: 0; border-radius: 999px; cursor: pointer;
     transition: transform .2s var(--ease), background-color .2s var(--ease);
 }
 button:hover, .btn:hover { background: var(--blue-hover); }
@@ -162,16 +170,29 @@ small { display: inline-block; align-self: flex-start; font-size: 13px; font-wei
 .checks div { display: flex; flex-wrap: wrap; gap: 6px; }
 .checks small { background: var(--bg); }
 
+/* footer, matched to /about's closing links: the name, one line, then the legal row with the source credit */
+.site-footer { border-top: 1px solid var(--line); padding-block: 48px; color: var(--muted); }
+.site-footer__top { display: grid; gap: 12px; }
+.site-footer__top p { font-size: 15px; }
+.site-footer__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--soft); }
+.site-footer__legal a { color: inherit; }
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; }
 }
 @media (max-width: 1023px) {
-    .wrap { width: min(100% - 96px, 1080px); }
+    :root { --gut: 48px; }
+    .site-header__bar { gap: 24px; }
     .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 760px) {
-    :root { --nav: 56px; }
-    .wrap { width: calc(100% - 40px); }
+@media (max-width: 639px) {
+    :root { --nav: 56px; --gut: 24px; }
+    .site-header__bar { gap: 8px; }
+    .logo { font-size: clamp(16px, 4.6vw, 20px); gap: 6px; }
+    .nav-link { padding: 0 8px; }
+    .nav-link::before, .nav-link[aria-current="page"]::after { left: 8px; right: 8px; }
+    .nav-link--search { display: none; }
+    .site-footer { padding-block: 32px; }
     main { padding-block: 20px 64px; }
     .search, .detail { padding: 24px 20px; }
     .search-lead { font-size: 15px; margin-bottom: 20px; }
