@@ -46,14 +46,14 @@
             <h2 th:text="${searched ? '맞춤 검색 결과' : '신청 가능한 공고'}"></h2>
             <a th:if="${searched}" th:href="@{/}">검색 초기화</a>
         </div>
-        <p class="muted">화면 확인용 샘플 공고입니다.</p>
+        <p class="muted">온통청년 공식 공고를 1시간마다 확인해요. 신청 전에 공식 공고를 꼭 확인해 주세요.</p>
         <p class="empty" th:if="${policies.isEmpty()}">조건에 맞는 공고가 없어요.</p>
         <ul class="cards">
             <li th:each="policy : ${policies}">
                 <a class="card" th:href="@{/policies/{id}(id=${policy.id()})}">
-                    <span class="region" th:attr="data-region=${policy.region().name()}" th:text="${policy.region().label()}"></span>
+                    <span class="region" th:attr="data-region=${policy.region().name()}"><span th:text="${policy.region().label()}"></span><span class="inst" th:if="${policy.institution() != null}" th:text="|· ${policy.institution()}|"></span></span>
                     <h3 th:text="${policy.title()}"></h3>
-                    <p th:text="${policy.summary()}"></p>
+                    <p class="summary" th:if="${policy.summary() != null and !policy.summary().isEmpty()}" th:text="${policy.summary()}"></p>
                     <div class="benefit" th:if="${policy.benefit() != null}"><span>지원 혜택</span><strong th:text="${policy.benefit()}"></strong></div>
                     <div class="deadline" th:text="${policy.deadline()}"></div>
                     <small th:each="note : ${policy.checkNotes()}" th:text="${note}"></small>

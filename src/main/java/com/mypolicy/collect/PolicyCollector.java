@@ -53,6 +53,8 @@ class PolicyCollector {
                 created++;
                 if (item.cancelled()) {
                     policy.cancel();
+                } else if (item.closed()) {
+                    policy.close(); // stored so a later reopening is seen, but never announced as new
                 } else if (!firstRun) {
                     event(policy, PolicyEvent.Type.NEW, null, null, runId, now);
                 }
@@ -67,6 +69,12 @@ class PolicyCollector {
                 updated++;
             }
             policy.markChecked(now);
+
+            if (item.closed() && !item.cancelled()) {
+                policy.close();
+            } else if (!item.closed()) {
+                policy.reopen();
+            }
 
             if (policy.getStatus() == PolicyStatus.ACTIVE && item.cancelled()) {
                 policy.cancel();
@@ -91,6 +99,9 @@ class PolicyCollector {
 
     private static Policy fill(Policy policy, SourcePolicy item) {
         return policy.withContent(item.region(), item.title(), item.summary())
+                .withInstitution(item.institution())
+                .withSupportContent(item.supportContent())
+                .withUnemployedOnly(item.unemployedOnly())
                 .withBenefit(item.benefit())
                 .withAgeRange(item.minAge(), item.maxAge())
                 .withEmployment(item.employedOnly(), item.smallBusinessOnly())
@@ -100,19 +111,22 @@ class PolicyCollector {
     }
 
     /** The stored content of a notice, to tell a real change from a repeated listing. */
-    private record Content(Region region, String title, String summary, String benefit, Integer minAge, Integer maxAge,
-            boolean employedOnly, boolean smallBusinessOnly, LocalDate applyStart, LocalDate applyEnd,
+    private record Content(Region region, String institution, String title, String summary, String supportContent,
+            String benefit, Integer minAge, Integer maxAge, boolean employedOnly, boolean smallBusinessOnly,
+            boolean unemployedOnly, LocalDate applyStart, LocalDate applyEnd,
             LocalTime applyEndTime, String officialUrl, String applyUrl, List<String> checkNotes) {
 
         static Content of(Policy p) {
-            return new Content(p.getRegion(), p.getTitle(), p.getSummary(), p.getBenefit(), p.getMinAge(), p.getMaxAge(),
-                    p.isEmployedOnly(), p.isSmallBusinessOnly(), p.getApplyStart(), p.getApplyEnd(), p.getApplyEndTime(),
+            return new Content(p.getRegion(), p.getInstitution(), p.getTitle(), p.getSummary(), p.getSupportContent(),
+                    p.getBenefit(), p.getMinAge(), p.getMaxAge(), p.isEmployedOnly(), p.isSmallBusinessOnly(),
+                    p.isUnemployedOnly(), p.getApplyStart(), p.getApplyEnd(), p.getApplyEndTime(),
                     p.getOfficialUrl(), p.getApplyUrl(), p.getCheckNotes());
         }
 
         static Content of(SourcePolicy s) {
-            return new Content(s.region(), s.title(), s.summary(), s.benefit(), s.minAge(), s.maxAge(),
-                    s.employedOnly() || s.smallBusinessOnly(), s.smallBusinessOnly(), s.applyStart(), s.applyEnd(),
+            return new Content(s.region(), s.institution(), s.title(), s.summary(), s.supportContent(),
+                    s.benefit(), s.minAge(), s.maxAge(), s.employedOnly() || s.smallBusinessOnly(), s.smallBusinessOnly(),
+                    s.unemployedOnly(), s.applyStart(), s.applyEnd(),
                     s.applyEndTime(), s.officialUrl(), s.applyUrl(), s.checkNotes());
         }
     }

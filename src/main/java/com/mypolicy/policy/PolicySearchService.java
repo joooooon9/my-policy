@@ -38,7 +38,7 @@ public class PolicySearchService {
         return policies.findByStatusAndRegionInOrderByApplyEndAscIdAsc(PolicyStatus.ACTIVE, regions).stream()
                 .filter(p -> PolicyMatcher.isOpen(p, today))
                 .filter(p -> PolicyMatcher.matches(p, condition))
-                .map(p -> new PolicyCard(p.getId(), p.getRegion(), p.getTitle(), p.getSummary(), p.getBenefit(),
+                .map(p -> new PolicyCard(p.getId(), p.getRegion(), p.getInstitution(), p.getTitle(), p.getSummary(), p.getBenefit(),
                         ApplyPeriodText.deadline(p.getApplyEnd(), p.getApplyEndTime(), today),
                         PolicyMatcher.checkNotes(p, condition)))
                 .toList();
@@ -47,7 +47,8 @@ public class PolicySearchService {
     public Optional<PolicyDetail> detail(long id) {
         LocalDate today = LocalDate.now(clock);
         return policies.findById(id).map(p -> new PolicyDetail(
-                p.getId(), p.getRegion(), p.getTitle(), p.getBenefit(), target(p), p.getSummary(),
+                p.getId(), p.getRegion(), p.getInstitution(), p.getTitle(), p.getSummary(), p.getBenefit(), target(p),
+                p.getSupportContent() == null || p.getSupportContent().isBlank() ? p.getSummary() : p.getSupportContent(),
                 ApplyPeriodText.period(p.getApplyStart(), p.getApplyEnd(), p.getApplyEndTime()),
                 ApplyPeriodText.deadline(p.getApplyEnd(), p.getApplyEndTime(), today),
                 p.getApplyUrl(), p.getOfficialUrl(),
@@ -71,6 +72,8 @@ public class PolicySearchService {
             lines.add("중소기업 재직자");
         } else if (p.isEmployedOnly()) {
             lines.add("재직자");
+        } else if (p.isUnemployedOnly()) {
+            lines.add("미취업자");
         }
         if (lines.isEmpty()) {
             lines.add("공식 공고에서 확인해 주세요.");

@@ -46,6 +46,9 @@ public final class PolicyMatcher {
         if (policy.isEmployedOnly() && condition.employment() == Employment.UNEMPLOYED) {
             return false;
         }
+        if (policy.isUnemployedOnly() && condition.employment() == Employment.EMPLOYED) {
+            return false;
+        }
         return !(policy.isSmallBusinessOnly() && condition.smallBusiness() == SmallBusiness.NO);
     }
 

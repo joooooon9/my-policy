@@ -145,6 +145,26 @@ class CollectionServiceTest {
     }
 
     @Test
+    void aClosedNoticeIsStoredWithoutANewEventAndReopensLater() {
+        source.items.add(item("A", null));
+        collection.collect(source);
+
+        source.items.add(closed(item("B", null), true));
+        collection.collect(source);
+        assertThat(stored("B").getStatus()).isEqualTo(PolicyStatus.CLOSED);
+        assertThat(types("B")).isEmpty();
+
+        source.items.set(0, closed(item("A", null), true));
+        collection.collect(source);
+        assertThat(stored("A").getStatus()).isEqualTo(PolicyStatus.CLOSED);
+
+        source.items.set(0, item("A", null));
+        collection.collect(source);
+        assertThat(stored("A").getStatus()).isEqualTo(PolicyStatus.ACTIVE);
+        assertThat(events.count()).isZero();
+    }
+
+    @Test
     void aNoticeMissingFromTheListingIsNotCancelled() {
         source.items.add(item("A", LocalDate.of(2026, 11, 20)));
         collection.collect(source);
@@ -181,20 +201,26 @@ class CollectionServiceTest {
     }
 
     private static SourcePolicy item(String id, LocalDate end) {
-        return new SourcePolicy(id, Region.NATIONWIDE, "공고 " + id, "요약", null, 19, 34, false, false,
-                null, end, null, "https://example.org/" + id, null, List.of(), false);
+        return copy(new SourcePolicy(id, Region.NATIONWIDE, "기관", "공고 " + id, "요약", "지원 내용", null, 19, 34,
+                false, false, false, null, end, null, "https://example.org/" + id, null, List.of(), false, false), null, false, false);
     }
 
     private static SourcePolicy withEndTime(SourcePolicy s, LocalTime time) {
-        return new SourcePolicy(s.sourceId(), s.region(), s.title(), s.summary(), s.benefit(), s.minAge(), s.maxAge(),
-                s.employedOnly(), s.smallBusinessOnly(), s.applyStart(), s.applyEnd(), time, s.officialUrl(),
-                s.applyUrl(), s.checkNotes(), s.cancelled());
+        return copy(s, time, s.closed(), s.cancelled());
     }
 
     private static SourcePolicy cancelled(SourcePolicy s) {
-        return new SourcePolicy(s.sourceId(), s.region(), s.title(), s.summary(), s.benefit(), s.minAge(), s.maxAge(),
-                s.employedOnly(), s.smallBusinessOnly(), s.applyStart(), s.applyEnd(), s.applyEndTime(), s.officialUrl(),
-                s.applyUrl(), s.checkNotes(), true);
+        return copy(s, s.applyEndTime(), s.closed(), true);
+    }
+
+    private static SourcePolicy closed(SourcePolicy s, boolean closed) {
+        return copy(s, s.applyEndTime(), closed, s.cancelled());
+    }
+
+    private static SourcePolicy copy(SourcePolicy s, LocalTime endTime, boolean closed, boolean cancelled) {
+        return new SourcePolicy(s.sourceId(), s.region(), s.institution(), s.title(), s.summary(), s.supportContent(),
+                s.benefit(), s.minAge(), s.maxAge(), s.employedOnly(), s.smallBusinessOnly(), s.unemployedOnly(),
+                s.applyStart(), s.applyEnd(), endTime, s.officialUrl(), s.applyUrl(), s.checkNotes(), closed, cancelled);
     }
 
     static class FakeSource implements PolicySource {

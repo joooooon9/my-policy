@@ -54,6 +54,23 @@ class PolicyMatcherTest {
     }
 
     @Test
+    void unemployedOnlyNoticesAreExcludedForEmployedPeople() {
+        Policy jobSeekers = policy(Region.NATIONWIDE).withUnemployedOnly(true);
+        assertThat(PolicyMatcher.matches(jobSeekers, condition("", null, "employed", ""))).isFalse();
+        assertThat(PolicyMatcher.matches(jobSeekers, condition("", null, "unemployed", ""))).isTrue();
+        assertThat(PolicyMatcher.matches(jobSeekers, condition("", null, "", ""))).isTrue();
+    }
+
+    @Test
+    void closedNoticesAreNotOpen() {
+        Policy closed = policy(Region.NATIONWIDE);
+        closed.close();
+        assertThat(PolicyMatcher.isOpen(closed, TODAY)).isFalse();
+        closed.reopen();
+        assertThat(PolicyMatcher.isOpen(closed, TODAY)).isTrue();
+    }
+
+    @Test
     void smallBusinessNoExcludesButUnknownOnlyAddsANote() {
         Policy smallBusiness = policy(Region.IKSAN).withEmployment(false, true)
                 .withCheckNotes(List.of("근속기간 확인 필요"));

@@ -62,6 +62,18 @@ public class Policy {
     @Column(name = "small_business_only", nullable = false)
     private boolean smallBusinessOnly;
 
+    /** Only for people not in work (미취업자). */
+    @Column(name = "unemployed_only", nullable = false)
+    private boolean unemployedOnly;
+
+    /** What the policy gives, in the source's words; summary stays the short explanation. */
+    @Column(name = "support_content", columnDefinition = "text")
+    private String supportContent;
+
+    /** The institution that runs the policy. */
+    @Column(length = 200)
+    private String institution;
+
     @Column(name = "apply_start")
     private LocalDate applyStart;
 
@@ -170,6 +182,35 @@ public class Policy {
         return this;
     }
 
+    public Policy withUnemployedOnly(boolean unemployedOnly) {
+        this.unemployedOnly = unemployedOnly;
+        return this;
+    }
+
+    public Policy withSupportContent(String supportContent) {
+        this.supportContent = supportContent;
+        return this;
+    }
+
+    public Policy withInstitution(String institution) {
+        this.institution = institution;
+        return this;
+    }
+
+    /** The source says recruitment ended (no dates). A cancelled notice stays cancelled. */
+    public void close() {
+        if (status == PolicyStatus.ACTIVE) {
+            status = PolicyStatus.CLOSED;
+        }
+    }
+
+    /** The source lists a closed notice as open again. */
+    public void reopen() {
+        if (status == PolicyStatus.CLOSED) {
+            status = PolicyStatus.ACTIVE;
+        }
+    }
+
     public void cancel() {
         this.status = PolicyStatus.CANCELLED;
     }
@@ -185,6 +226,9 @@ public class Policy {
     public Integer getMaxAge() { return maxAge; }
     public boolean isEmployedOnly() { return employedOnly; }
     public boolean isSmallBusinessOnly() { return smallBusinessOnly; }
+    public boolean isUnemployedOnly() { return unemployedOnly; }
+    public String getSupportContent() { return supportContent; }
+    public String getInstitution() { return institution; }
     public LocalDate getApplyStart() { return applyStart; }
     public LocalDate getApplyEnd() { return applyEnd; }
     public LocalTime getApplyEndTime() { return applyEndTime; }
