@@ -66,7 +66,8 @@ a { color: var(--blue); text-underline-offset: 3px; }
 /* header, matched to /about's nav: 72 tall (56 on a phone), the logo at 22, words at 15 with a line drawn on hover */
 .site-header { position: sticky; top: 0; z-index: 10; height: var(--nav); background: var(--bg); border-bottom: 1px solid var(--line); }
 .site-header__bar { height: 100%; display: flex; align-items: center; gap: 64px; }
-.logo { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; line-height: 1; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; flex: none; }
+/* the logo keeps the search screen's original style (19px, bold, tight), on /about too */
+.logo { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; flex: none; }
 .mark { display: inline-block; flex: none; width: 22px; height: 22px; background: var(--accent);
         -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat;
         --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='2.5' width='20' height='5.5' rx='2.75'/%3E%3Crect x='2' y='9.25' width='14' height='5.5' rx='2.75'/%3E%3Crect x='2' y='16' width='8' height='5.5' rx='2.75'/%3E%3C/svg%3E"); }
@@ -208,7 +209,6 @@ small { display: inline-block; align-self: flex-start; font-size: 13px; font-wei
 @media (max-width: 639px) {
     :root { --nav: 56px; --gut: 24px; }
     .site-header__bar { gap: 8px; }
-    .logo { font-size: clamp(16px, 4.6vw, 20px); gap: 6px; }
     .site-footer { padding-block: 32px; }
     main { padding-block: 20px 64px; }
     .search, .detail { padding: 24px 20px; }

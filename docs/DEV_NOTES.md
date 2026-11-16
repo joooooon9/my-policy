@@ -36,9 +36,10 @@
 | 2026-11-16 | 접수 구분 `aplyPrdSeCd`: 특정기간이면 `aplyYmd` 날짜, 상시는 날짜 없음, 마감은 CLOSED 상태로 저장(목록에서 빠짐, 다시 열리면 ACTIVE). 회차가 여러 개면 오늘 진행 중인 회차, 없으면 다음 회차. 마감 시각은 API에 없어 넣지 않는다. |
 | 2026-11-16 | 공고 자체 링크가 없으면 온통청년 상세 페이지(`/youthPolicy/ythPlcyTotalSearch/ythPlcyDetail/{plcyNo}`)를 공식 공고 링크로 쓴다. |
 | 2026-11-16 | 지원 내용 원문(`support_content`), 운영 기관(`institution`), 미취업자 전용(`unemployed_only`)을 추가했다(V3). 미취업자 전용 공고는 재직 중으로 검색하면 빠진다. 샘플 공고는 V3에서 지우고 `my-policy.sample-data=false`로 껐다. |
-| 2026-11-17 | 검색·상세 화면의 틀을 `/about`(스킬 키트)에 맞췄다: 헤더 72px(폰 56px), 콘텐츠 최대 1280px에 양옆 80/48/24px, 로고 22px·굵기 500, 메뉴 글자 15px에 밑줄 효과, 알약 모양 버튼, 폰 기준 639px. 헤더와 푸터는 `templates/fragments/layout.html` 한 곳에서 관리한다. 모든 화면 푸터에 "정책 정보 출처: 온통청년(한국고용정보원)"을 표시한다. 1023px 이하에서는 두 화면 모두 메뉴가 ☰ 버튼으로 접히고 전체 화면 시트로 열린다(검색·상세는 `static/js/nav.js`, `/about`은 키트의 system.js). |
+| 2026-11-17 | 검색·상세 화면의 틀을 `/about`(스킬 키트)에 맞췄다: 헤더 72px(폰 56px), 콘텐츠 최대 1280px에 양옆 80/48/24px, 메뉴 글자 15px에 밑줄 효과, 알약 모양 버튼, 폰 기준 639px. 헤더와 푸터는 `templates/fragments/layout.html` 한 곳에서 관리한다. 모든 화면 푸터에 "정책 정보 출처: 온통청년(한국고용정보원)"을 표시한다. 1023px 이하에서는 두 화면 모두 메뉴가 ☰ 버튼으로 접히고 전체 화면 시트로 열린다(검색·상세는 `static/js/nav.js`, `/about`은 키트의 system.js). |
 | 2026-11-17 | 전북·익산 수집을 켰다(`my-policy.youthcenter.regions=NATIONWIDE,JEONBUK,IKSAN`). 검색 화면의 거주 지역 선택지는 수집 중인 지역만 보여 준다(`CollectedRegions`). |
 | 2026-11-17 | 첫 수집 규칙을 지역별로 적용한다: 실행 기록에 수집 지역(`collection_run.regions`, V4)을 남기고, 출처가 처음 수집하는 지역의 공고는 NEW 이벤트 없이 목록만 채운다. 지역을 새로 켤 때 알림이 한꺼번에 나가지 않게 하려는 것이다. |
+| 2026-11-17 | 헤더 로고 글씨는 원래 검색 화면 스타일(19px, 굵기 700, 자간 -0.03em, 마크와 간격 10px)로 두 화면 모두 통일한다. `/about`은 페이지 CSS에서 키트 값(22px, 500)을 덮어쓴다. 메인 페이지는 검색 화면 그대로 두고, 처음 온 사람에게는 공유 링크로 `/about`을 쓴다. |
 | 2026-11-12 | 스킬 사본(`.claude/skills/design-taste-frontend`, 38MB)은 저장소에 그대로 둔다. 설치 원본은 `.agents/`(무시), 출처는 `skills-lock.json`. |
 
 ## 알려진 문제

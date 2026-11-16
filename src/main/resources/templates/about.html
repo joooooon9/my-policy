@@ -70,6 +70,8 @@
   h1, h2, h3 { word-break: keep-all; }
   .hero__lead, .section-head p, .card p, .faq p, .rows p { word-break: keep-all; }
   #match .card p { color: var(--ink); }
+  /* the logo in the search screen's style (policy.css .logo): 19px, bold, tight; the same on a phone */
+  .nav__logo { font-size: 19px; font-weight: 700; letter-spacing: -0.03em; gap: 10px; }
   /* a brighter lit ground (Toss-like sky) for the alert frame and the closing slab */
   html[data-ground] :is(#alerts .frame--lit, .footer--statement) { --ground-bg: #e8f3ff; --ground-surface: #f5f9ff; --action: var(--p-action); --action-ink: var(--p-action-ink); }
   /* dark: one rule set, applied by the system setting or the visitor's pick */
