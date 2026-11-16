@@ -9,6 +9,8 @@
   - PC를 켤 때 Docker Desktop도 자동으로 켜려면 Docker Desktop → Settings → General → "Start Docker Desktop when you sign in to your computer".
   - `docker compose down -v`는 볼륨까지 지워 데이터가 사라지니 쓰지 않는다.
 - 앱은 IntelliJ에서 `MyPolicyApplication`을 실행한다(기본 포트 8080).
+- 비밀 값은 프로젝트 루트의 `.env`(저장소 제외)에 `KEY=value`로 둔다. 앱이 시작할 때 읽고(`spring.config.import=optional:file:.env[.properties]`), 같은 이름의 OS 환경 변수가 있으면 그쪽이 우선한다. 필요한 키 목록은 `.env.example`.
+- Docker Desktop이 꺼져 있으면 `Connection to localhost:5432 refused`로 앱이 뜨지 않고, 수집 테스트도 `Could not find a valid Docker environment`로 실패한다.
 - DevTools가 들어 있다. IntelliJ에서 아래 두 설정을 켜면 템플릿·CSS는 새로고침, Java는 자동 재시작으로 반영된다.
   - Settings → Build, Execution, Deployment → Compiler → **Build project automatically**
   - Settings → Advanced Settings → **Allow auto-make to start even if developed application is currently running**
