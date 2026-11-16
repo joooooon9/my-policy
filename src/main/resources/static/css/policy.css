@@ -78,6 +78,7 @@ a { color: var(--blue); text-underline-offset: 3px; }
 .header-actions { display: flex; align-items: center; gap: 16px; flex: none; margin-left: auto; }
 .theme-toggle { width: 44px; height: 44px; padding: 0; color: var(--muted); background: transparent; border-radius: 12px; }
 .theme-toggle:hover { color: var(--ink); background: var(--panel); }
+.site-header__toggle { display: none; }
 .theme-toggle svg { width: 20px; height: 20px; }
 .theme-toggle .i-sun, .theme-toggle[aria-pressed="true"] .i-moon { display: none; }
 .theme-toggle[aria-pressed="true"] .i-sun { display: block; }
@@ -183,15 +184,31 @@ small { display: inline-block; align-self: flex-start; font-size: 13px; font-wei
 @media (max-width: 1023px) {
     :root { --gut: 48px; }
     .site-header__bar { gap: 24px; }
+    /* 1023 and below, as on /about: the words and the theme button fold into a full-screen sheet behind the menu button */
+    .site-nav, .header-actions { display: none; }
+    .site-header__toggle {
+        display: inline-grid; place-items: center; margin-left: auto; width: 44px; height: 44px; padding: 0; flex: none;
+        border: 1px solid var(--input-hover); border-radius: 999px; background: transparent; color: var(--ink);
+    }
+    .site-header__toggle:hover { background: var(--panel); }
+    .site-header.is-open .site-nav {
+        display: flex; flex-direction: column; align-items: stretch; gap: 0; position: fixed; top: var(--nav); left: 0; right: 0; bottom: 0;
+        padding: 16px var(--gut) 120px; background: var(--bg); overflow-y: auto;
+    }
+    .site-header.is-open .nav-link { height: 56px; padding: 0; font-size: 20px; border-bottom: 1px solid var(--line); }
+    .site-header.is-open .nav-link::before { display: none; }
+    .site-header.is-open .nav-link[aria-current="page"]::after { left: 0; right: auto; width: 24px; bottom: 10px; }
+    .site-header.is-open .header-actions {
+        display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; margin: 0;
+        padding: 16px var(--gut) calc(16px + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--line);
+    }
+    body.nav-locked { overflow: hidden; }
     .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 639px) {
     :root { --nav: 56px; --gut: 24px; }
     .site-header__bar { gap: 8px; }
     .logo { font-size: clamp(16px, 4.6vw, 20px); gap: 6px; }
-    .nav-link { padding: 0 8px; }
-    .nav-link::before, .nav-link[aria-current="page"]::after { left: 8px; right: 8px; }
-    .nav-link--search { display: none; }
     .site-footer { padding-block: 32px; }
     main { padding-block: 20px 64px; }
     .search, .detail { padding: 24px 20px; }
