@@ -8,17 +8,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mypolicy.collect.CollectedRegions;
 import com.mypolicy.policy.PolicySearchService;
-import com.mypolicy.policy.Region;
 import com.mypolicy.policy.SearchCondition;
 
 @Controller
 public class HomeController {
 
     private final PolicySearchService search;
+    private final CollectedRegions collectedRegions;
 
-    public HomeController(PolicySearchService search) {
+    public HomeController(PolicySearchService search, CollectedRegions collectedRegions) {
         this.search = search;
+        this.collectedRegions = collectedRegions;
     }
 
     @GetMapping("/")
@@ -29,7 +31,7 @@ public class HomeController {
         SearchCondition condition = SearchCondition.fromParams(region, age, employment, smallBusiness);
         model.addAttribute("policies", search.search(condition));
         model.addAttribute("searched", condition.isSearch());
-        model.addAttribute("regions", Region.values());
+        model.addAttribute("regions", collectedRegions.list());
         model.addAttribute("region", region);
         model.addAttribute("age", age);
         model.addAttribute("employment", employment);

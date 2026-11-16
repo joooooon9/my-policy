@@ -1,6 +1,10 @@
 package com.mypolicy.collect;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import com.mypolicy.policy.Region;
 
 @Entity
 @Table(name = "collection_run")
@@ -52,13 +58,18 @@ public class CollectionRun {
     @Column(columnDefinition = "text")
     private String error;
 
+    /** The service regions this run collected, comma-separated Region names. */
+    @Column(length = 100)
+    private String regions;
+
     protected CollectionRun() {
     }
 
-    public CollectionRun(String source, Instant startedAt, boolean firstRun) {
+    public CollectionRun(String source, Instant startedAt, boolean firstRun, Set<Region> regions) {
         this.source = source;
         this.startedAt = startedAt;
         this.firstRun = firstRun;
+        this.regions = regions.stream().sorted().map(Region::name).collect(Collectors.joining(","));
     }
 
     void succeed(Instant at, CollectResult result) {
@@ -85,4 +96,12 @@ public class CollectionRun {
     public int getUpdated() { return updated; }
     public int getCancelled() { return cancelled; }
     public String getError() { return error; }
+
+    public Set<Region> getRegions() {
+        Set<Region> set = EnumSet.noneOf(Region.class);
+        if (regions != null && !regions.isBlank()) {
+            Arrays.stream(regions.split(",")).map(String::trim).map(Region::valueOf).forEach(set::add);
+        }
+        return set;
+    }
 }

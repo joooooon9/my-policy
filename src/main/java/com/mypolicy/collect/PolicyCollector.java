@@ -20,7 +20,8 @@ import com.mypolicy.policy.Region;
 /**
  * Writes one source's listing into the database in one transaction: finds each notice by source and id,
  * creates or refreshes it, stamps the check time and records what changed as events.
- * On the source's first run no NEW events are written, so the first collection only fills the list.
+ * In a region the source collects for the first time (quietRegions) no NEW events are written, so a first
+ * collection, of the source or of a newly added region, only fills the list.
  */
 @Component
 class PolicyCollector {
@@ -36,7 +37,7 @@ class PolicyCollector {
     }
 
     @Transactional
-    public CollectResult apply(String source, List<SourcePolicy> listing, Long runId, boolean firstRun) {
+    public CollectResult apply(String source, List<SourcePolicy> listing, Long runId, Set<Region> quietRegions) {
         Instant now = clock.instant();
         int created = 0;
         int updated = 0;
@@ -55,7 +56,7 @@ class PolicyCollector {
                     policy.cancel();
                 } else if (item.closed()) {
                     policy.close(); // stored so a later reopening is seen, but never announced as new
-                } else if (!firstRun) {
+                } else if (!quietRegions.contains(item.region())) {
                     event(policy, PolicyEvent.Type.NEW, null, null, runId, now);
                 }
                 continue;

@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,6 +69,8 @@ class CollectionServiceTest {
         runs.deleteAll();
         policies.deleteAll();
         source.items.clear();
+        source.regions.clear();
+        source.regions.add(Region.NATIONWIDE);
         source.fail = false;
     }
 
@@ -98,6 +102,46 @@ class CollectionServiceTest {
         assertThat(second.getCreated()).isEqualTo(1);
         assertThat(types("B")).containsExactly(PolicyEvent.Type.NEW);
         assertThat(types("A")).isEmpty();
+    }
+
+    @Test
+    void aNewlyAddedRegionFillsItsListWithoutNewNoticeEvents() {
+        source.items.add(item("A", LocalDate.of(2026, 11, 20)));
+        collection.collect(source);
+
+        // 익산 is collected from now on: what it already lists is not news, a nationwide notice still is
+        source.regions.add(Region.IKSAN);
+        source.items.add(in(item("B", LocalDate.of(2026, 11, 30)), Region.IKSAN));
+        source.items.add(item("C", LocalDate.of(2026, 11, 30)));
+        CollectionRun added = collection.collect(source);
+
+        assertThat(added.isFirstRun()).isFalse();
+        assertThat(added.getRegions()).containsExactlyInAnyOrder(Region.NATIONWIDE, Region.IKSAN);
+        assertThat(types("B")).isEmpty();
+        assertThat(types("C")).containsExactly(PolicyEvent.Type.NEW);
+
+        // the next 익산 notice is new
+        source.items.add(in(item("D", LocalDate.of(2026, 12, 5)), Region.IKSAN));
+        collection.collect(source);
+        assertThat(types("D")).containsExactly(PolicyEvent.Type.NEW);
+    }
+
+    @Test
+    void aSourceIsBehindUntilEveryRegionHasSucceededAndAfterAFailure() {
+        assertThat(collection.behind(source)).isTrue(); // never collected
+
+        source.items.add(item("A", LocalDate.of(2026, 11, 20)));
+        collection.collect(source);
+        assertThat(collection.behind(source)).isFalse();
+
+        source.regions.add(Region.JEONBUK);
+        assertThat(collection.behind(source)).isTrue(); // a region newly turned on
+        collection.collect(source);
+        assertThat(collection.behind(source)).isFalse();
+
+        source.fail = true;
+        collection.collect(source);
+        assertThat(collection.behind(source)).isTrue(); // the last run failed
     }
 
     @Test
@@ -205,6 +249,13 @@ class CollectionServiceTest {
                 false, false, false, null, end, null, "https://example.org/" + id, null, List.of(), false, false), null, false, false);
     }
 
+    private static SourcePolicy in(SourcePolicy s, Region region) {
+        return new SourcePolicy(s.sourceId(), region, s.institution(), s.title(), s.summary(), s.supportContent(),
+                s.benefit(), s.minAge(), s.maxAge(), s.employedOnly(), s.smallBusinessOnly(), s.unemployedOnly(),
+                s.applyStart(), s.applyEnd(), s.applyEndTime(), s.officialUrl(), s.applyUrl(), s.checkNotes(),
+                s.closed(), s.cancelled());
+    }
+
     private static SourcePolicy withEndTime(SourcePolicy s, LocalTime time) {
         return copy(s, time, s.closed(), s.cancelled());
     }
@@ -226,7 +277,13 @@ class CollectionServiceTest {
     static class FakeSource implements PolicySource {
         static final String NAME = "fake";
         final List<SourcePolicy> items = new ArrayList<>();
+        final Set<Region> regions = EnumSet.of(Region.NATIONWIDE);
         boolean fail;
+
+        @Override
+        public Set<Region> regions() {
+            return regions;
+        }
 
         @Override
         public String name() {
